@@ -1,11 +1,15 @@
 import pygame, sys
 from settings import *
+from level import Level
 
 class Game:
-    def __innit__(self):
+    def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((Width,height))
+        self.screen = pygame.display.set_mode((Width,Height))
+        pygame.display.set_caption('Omnion')
         self.clock = pygame.time.Clock()
+        self.level = Level()
+
 
 def run(self):
     while True:
@@ -15,8 +19,9 @@ def run(self):
                 sys.exit()
             
         self.screen.fill('black')
+        self.level.run()
         pygame.display.updated()
-        self.clock.tick(FPS)
+        self.clock.tick(Fps)
 
 if __name__ == '__main__':
     game = Game()
