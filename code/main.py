@@ -14,6 +14,38 @@ class Game:
         self.level = Level()
         self.font_name = None
         self.WHITE = (255,255,255)
+        self.menu_options = ["Start Game", "Quit"]
+        self.selected_option = 0
+
+    def main_menu(self):
+        while self.running:
+            self.check_events()
+
+            # Navigate menu
+            if self.DOWN_KEY:
+                self.selected_option = (self.selected_option + 1) % len(self.menu_options)
+            elif self.UP_KEY:
+                self.selected_option = (self.selected_option - 1) % len(self.menu_options)
+            elif self.START_KEY:
+                if self.selected_option == 0:  # Start Game
+                    self.playing = True
+                    self.game_loop()
+            elif self.selected_option == 1:  # Quit
+                pygame.quit()
+                sys.exit()
+
+        # Drawing menu (NOW INSIDE THE LOOP)
+            self.display.fill((0, 0, 0))
+            for i, option in enumerate(self.menu_options):
+                color = (255, 255, 0) if i == self.selected_option else self.WHITE
+                self.draw_text(option, 40, Width / 2, Height / 2 + i * 50, color)
+
+            print("Rendering menu frame...")  # This will print every frame
+
+            self.screen.blit(self.display, (0, 0))
+            pygame.display.update()
+            self.clock.tick(Fps)
+            self.reset_keys()
 
     def check_events(self):
         for event in pygame.event.get():
@@ -50,15 +82,15 @@ class Game:
                  pygame.quit()
                  sys.exit()
             
-            #self.screen.fill('black')
+            self.screen.fill('black')
             self.screen.blit(self.display, (0,0))
             self.level.run()
             pygame.display.update()
             self.clock.tick(Fps)
     
-    def draw_text(self, text, size, x,y):
-        font = pygame.font.Font(self.font_name, size)
-        text_surface = font.render(text, True, self.WHITE)
+    def draw_text(self, text, size, x,y, color ):
+        font = pygame.font.Font(None, size)
+        text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.center = (x,y)
         self.display.blit(text_surface,text_rect)
@@ -66,6 +98,7 @@ class Game:
 
 if __name__ == '__main__':
     game = Game()
-    game.playing = True 
-    game.game_loop()
-    game.run()
+    game.main_menu()
+    #game.playing = True 
+    #game.game_loop()
+    #game.run()
